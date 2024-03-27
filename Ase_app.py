@@ -2,10 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-import joblib
-from streamlit_option_menu import option_menu
 from sklearn.preprocessing import MinMaxScaler
-
 
 # Configuring the page with Title, icon, and layout
 st.set_page_config(
@@ -58,37 +55,40 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+
+
 def horizontal_line(height=1, color="blue", margin="0.5em 0"):
     return f'<hr style="height: {height}px; margin: {margin}; background-color: {color};">'
 # Load the XGBoost model
-model_path = "C:/Users/Dawit Shibabaw/Desktop/Iris_stremalit - Copy/Breastcnacer_rf_model.sav"
-loaded_model = joblib.load(open(model_path, "rb"))
+model_path = "/home/hdoop/U5MortalityPrediction_XGBoost"
+loaded_model = pickle.load(open(model_path, "rb"))
 
 # Load the label encoders
-label_encoders_path = "C:/Users/Dawit Shibabaw/Desktop/Iris_stremalit - Copy/label_encoders.pkl"
+label_encoders_path = "/home/hdoop/label_encoders.pkl"
 label_encoders = pickle.load(open(label_encoders_path, "rb"))
 
 # Load the MinMax scalers
-scalers_path = "C:/Users/Dawit Shibabaw/Desktop/Iris_stremalit - Copy/minmax_scaler.pkl"
+scalers_path = "/home/hdoop/minmax_scalers.pkl"
 minmax_scalers = pickle.load(open(scalers_path, "rb"))
 
 # Feature names and types
 features = {
-   'radius_mean': 'numerical', 
-   'perimeter_mean': 'numerical', 
-   'area_mean': 'numerical',
-   'concave points_mean': 'categorical', 
-   'fractal_dimension_mean': 'categorical', 
-   'radius_se': 'categorical',
-   'texture_se': 'categorical', 
-   'area_se': 'numerical',
-   'concavity_se': 'categorical', 
-   'concave points_se': 'numerical',
-   'texture_worst': 'numerical',
-   'perimeter_worst': 'numerical',
-   'area_worst': 'numerical', 
-   'compactness_worst': 'categorical',  
-}
+    'residence_region': 'categorical',
+    'residence_type': 'categorical',
+    'altitude_in_meter': 'numerical',
+    'electricity_availablity': 'categorical',
+    'toilet_facility_type': 'categorical',
+    'refrigerator_availablity': 'categorical',
+    'water_source': 'categorical',
+    'cooking_fuel_type': 'categorical',
+    'age_child_months': 'numerical',
+    'sex_child': 'categorical',
+    'person_child_lives': 'categorical',
+    'month_birth_child': 'numerical',
+    'birth_type': 'categorical',
+    'place_delivery': 'categorical'  
+
 # Sidebar title
 st.sidebar.title("Input Parameters")
 st.sidebar.markdown("""
@@ -96,10 +96,10 @@ st.sidebar.markdown("""
 """)
 # Create dictionary for grouping labels
 group_labels = {
-    'Geographic and Environmental': ['radius_mean', 'perimeter_mean', 'area_mean'],
-    'Household Infrastructure': ['concave points_mean', 'fractal_dimension_mean', 'radius_se'],
-    'Child-Related': ['texture_se', 'area_se', 'concavity_se', 'concave points_se'],
-    'Parental and Reproductive': ['texture_worst', 'perimeter_worst', 'area_worst', 'compactness_worst']
+    'Geographic and Environmental': ['residence_region', 'residence_type'],
+    'Household Infrastructure': ['electricity_availablity', 'toilet_facility_type'],
+    'Child-Related': ['age_child_months', 'sex_child', 'person_child_lives', 'month_birth_child', 'birth_type'],
+    'Parental and Reproductive': ['age_household_head', 'religion', 'mother_education', 'current_marital_status'']
 }
 
 # Option for CSV file upload
